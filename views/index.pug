@@ -5,7 +5,16 @@ html(lang="ja")
     title= title
     link(rel="stylesheet", href="/style.css")
   body
-    h1 マインスイーパー (5×5)
+    h1 マインスイーパー
     p サーバーサイド（Pug）から配信されたゲーム画面です。地雷を避けてクリックしよう！
+    
+    div#controls
+      label(for="sizeSelect") マスの数: 
+      select#sizeSelect
+        option(value="5") 5 x 5 (地雷5個)
+        option(value="10") 10 x 10 (地雷15個)
+        option(value="15") 15 x 15 (地雷30個)
+      button#resetBtn リセット
+      
     div#board
     script(src="/script.js")
