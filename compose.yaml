@@ -1,0 +1,9 @@
+services:
+  app:
+    # どのディレクトリのDockerfileを使ってビルドするか
+    build: .
+    # コンテナの名前を "mine-mine" に指定
+    container_name: mine-mine-container
+    # ポートの紐付け（PCの3000番 : コンテナの3000番）
+    ports:
+      - "3000:3000"

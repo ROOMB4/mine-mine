@@ -15,13 +15,12 @@ body {
 }
 #board {
   display: grid;
-  /* grid-template-columns は JavaScriptで動的に設定します */
   gap: 3px;
   justify-content: center;
   margin-top: 20px;
 }
 .cell {
-  width: 35px; /* マスを少し小さく調整 */
+  width: 35px;
   height: 35px;
   background-color: #cbd5e1;
   font-size: 18px;

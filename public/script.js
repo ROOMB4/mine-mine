@@ -20,7 +20,7 @@ function updateSettings() {
 function initGame() {
   updateSettings();
   board.innerHTML = '';
-  // JavaScriptからCSSの列数を動的に変更
+  // JavaScriptからCSSの列数を動的に変更してマス目を並べる
   board.style.gridTemplateColumns = `repeat(${size}, 35px)`;
   bombs = [];
   cells = [];
@@ -61,7 +61,7 @@ function clickCell(index) {
   if (count > 0) {
     cell.textContent = count;
   } else {
-    // 【連鎖開き】数字が0（安全）なら、周囲のマスもクリック扱いにする（再帰処理）
+    // 【連鎖開き】数字が0（安全）なら、周囲のマスもクリック扱いにする
     const neighbors = getNeighbors(index);
     for (const neighborIndex of neighbors) {
       if (!cells[neighborIndex].classList.contains('open')) {
@@ -91,7 +91,7 @@ function getNeighbors(index) {
 
   for (let r = -1; r <= 1; r++) {
     for (let c = -1; c <= 1; c++) {
-      if (r === 0 && c === 0) continue; // 自分自身は除外
+      if (r === 0 && c === 0) continue;
       const newRow = row + r;
       const newCol = col + c;
       if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
@@ -102,9 +102,34 @@ function getNeighbors(index) {
   return neighbors;
 }
 
-// イベントリスナーの登録
-resetBtn.addEventListener('click', initGame);
-sizeSelect.addEventListener('change', initGame);
+// 【追加】サーバーへログを送信する関数
+function sendLogToServer(message) {
+  fetch('/log', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    // 送りたい文字をJSON形式に変換して送る
+    body: JSON.stringify({ message: message })
+  }).catch(error => {
+    console.error('ログの送信に失敗しました:', error);
+  });
+}
+
+// 【変更】イベントリスナーの登録（直接initGameを呼ぶのではなく、ログ送信を挟む）
+
+// リセットボタンが押されたとき
+resetBtn.addEventListener('click', () => {
+  sendLogToServer('リセットボタンが押されました');
+  initGame(); // その後にゲームを初期化
+});
+
+// サイズが変更されたとき
+sizeSelect.addEventListener('change', (event) => {
+  const newSize = event.target.value;
+  sendLogToServer(`マスの大きさが変更されました: ${newSize} x ${newSize}`);
+  initGame(); // その後にゲームを初期化
+});
 
 // 最初の起動
 initGame();
